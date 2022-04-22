@@ -43,7 +43,7 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
 3. Tiến hành compiler: ***tsc --watch***
 
 ## Cài đặt môi trường chạy:
-1. ***npm i -g type-script***
+1. ***npm i -g typescript***
 2. ***npm i -g ts-node***
 
 ## Các kiểu dữ liệu trong TypeScript khác Javascript
@@ -52,7 +52,7 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
 
 1. Định nghĩa:
     - Có hai dấu chấm ở đằng sau tên biến khởi tạo
-
+    - gắn cho biến đó giá trị một cách chính xác 
     ```ts
         let color: string = 'blue';
 
@@ -61,9 +61,11 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     ***
 ### Type Inference
 1. Định nghĩa:
-    - Type inference có nghĩa là typescript sẽ tự động đoán kiểu dữ liệu của biến đó là gì thông qua giá trị được gắn ban đầu.
+    - Type inference có nghĩa là typescript sẽ tự động phán đoán kiểu dữ liệu của biến đó là gì thông qua giá trị được gắn ban đầu.
     ```ts
         let color = 'blue';
+
+        console.log(typeof color)// string
 
     ```
 ### Union type(Assigning multiple types)
@@ -85,7 +87,67 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     ```ts
         let array1: number[]=[1,2,3]; //cách1
         let array2: Array<number>=[1,2,3]; //cách2
+
+         //mảng với kiểu any
+        let list: any[] = [1, true, "free"];
+
+        list[1] = 100;
+
     ```
+### Object
+1. Khai báo: Object có thể được khai báo bằng cách sau:
+- Cách 1: 
+    ```ts
+        let employee1: object;
+
+        employee1 = {
+            firstName: 'John',
+            lastName: 'Doe',
+            age: 25,
+            jobTitle: 'Web Developer'
+        };
+        // Hoặc
+        let employee2 = {
+            firstName: 'John',
+            lastName: 'Doe',
+            age: 25,
+            jobTitle: 'Web Developer'
+        };
+        console.log(employee1,employee2);
+    ```
+- Cách 2:  Chỉ định rõ ràng thuộc tính của đối tượng
+
+    ```ts
+        let employee: {
+            firstName: string;
+            lastName: string;
+            age: number;
+            jobTitle: string;
+        };
+
+        //Sau đó gắn đối tượng với các thuộc tính mô tả ở trên
+        employee = {
+            firstName: 'John',
+            lastName: 'Doe',
+            age: 25,
+            jobTitle: 'Web Developer'
+        };
+
+        //Hoặc có thể ghi ngắn gọn hơn
+
+        let employee: {
+            firstName: string;
+            lastName: string;
+            age: number;
+            jobTitle: string;
+        } = {
+            firstName: 'John',
+            lastName: 'Doe',
+            age: 25,
+            jobTitle: 'Web Developer'
+        };
+    ```
+
 ### Tuple
 1. Khai báo: Tuple cho phép bạn khai báo mảng với các giá trị có kiểu dữ liệu mà bạn đã biết
     ```ts
@@ -96,7 +158,8 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     ```
 ### Enum
 1. Khai báo:
-    -  Enum cho phép chúng ta tạo một nhóm các giá trị hằng số trong một nơi chung.
+    - là một cách để đặt những cái tên thân thiện hơn với bộ giá trị số.
+    - Enum cho phép chúng ta tạo một nhóm, tập hợp các giá trị hằng số trong một nơi chung.
     - Nó sử dụng để khai báo một tập hợp kiểu liệt kê
     ```ts
         enum Phone {
@@ -109,10 +172,6 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
         console.log(phoneName1);//0
         console.log(phoneName2);//10000
 
-        //mảng với kiểu any
-        let list: any[] = [1, true, "free"];
-
-        list[1] = 100;
     ```
 ### Any
 1. Khai báo:
@@ -142,6 +201,9 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
         count+1;
     }
     ```
+#### So sánh Any và Unknown
+- unknown được khuyến nghị hơn any vì nó cung cấp khả năng nhập an toàn hơn - bạn phải sử dụng xác nhận kiểu hoặc thu hẹp thành một kiểu cụ thể nếu bạn muốn thực hiện các thao tác trên unknown.
+
 ### Void 
 1. Khai báo: Được dùng với hàm không trả về giá trị
  ```ts
@@ -159,8 +221,13 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     // v="hello" //Error
  ```
 
-### Alias
-1. Khai báo: Tạo một kiểu mới cho kiểu hiện có. Giúp viết code ngắn gọn hơn
+### Type Aliases
+1. Khai báo: 
+- Tạo một kiểu mới cho kiểu hiện có. Giúp viết code ngắn gọn hơn
+- Đặt tên lại cho bất cứ kiểu dữ liệu nào khác
+- Có thể export để dùng ở file khác
+- có Optional Properties
+- có readonly: chỉ đọc chứ ko thể thay đổi giá trị của đối tượng
 ```ts
 //Theo cách cũ->dài dòng
     let person: {name: string, age: number};
@@ -172,7 +239,7 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     let blogger: { name: string; age: number };
 
 //Theo cách dùng Alias
-   type IPerson = { name: string; age: number };
+   type IPerson = { name: string; age?: number };
  
     let person: IPerson;
     
@@ -182,10 +249,252 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     
     let blogger: IPerson;
 ```
+- Cũng có thể đặt tên cho các quy định kiểu dữ liệu:
+```ts
+    //Cách 1
+
+    type ID = number | string;
+
+    function print1(a:ID){
+
+    }
+
+    print1(10)
+
+    //Cách 2
+
+    type colorDemo= "Green"|"Yellow";
+
+    function print2(a:colorDemo){
+
+    }
+        
+    print2("Yellow")
+```
+
+### Interfaces
+1. Khai báo:
+- Tạo một khuôn mẫu cho đối tượng tuân theo, nếu đối tượng ko thực thi đúng theo khuôn mẫu interface thì sẽ phát sinh lỗi ngay lập tức
+- Chỉ sử dụng được đặt cho object mà thôi
+- ***Không thể*** đặt tên cho các quy định kiểu dữ liệu nguyên thủy
+- có thể export để dùng ở file khác
+- có Optional Properties
+- có readonly: chỉ đọc chứ ko thể thay đổi giá trị của đối tượng
+```ts
+    //Viết code ngắn gọn, đỡ lặp code dễ hiểu hơn
+    interface Preson{
+        name: string;
+        age: number;
+        address?: string;
+    }
+
+    let teachers: Preson;
+    let students: Preson;
+
+    teachers={name:"Dinh",age:30,address:"Đà Nẵng"};
+    students={name:"Manh",age:21}
+    //Không thể đặt tên cho các quy định kiểu dữ liệu nguyên thủy
+    interface tamp = number // Error
+```
+- Interface cũng có thể khai báo một hàm
+```ts
+interface SearchFunc {
+    (source: string, subString: string): boolean;
+}
+```
+- Indexable Types: ví dụ
+```ts
+    interface StringArray {
+    [index: number]: string;
+    }
+
+    let myName: StringArray;
+    myName = ["Tôi", "là","Nguyễn","Văn","A",9];// Phần tử của cùng bị lỗi vì không tuân theo khuôn mẫu
+
+    let myStr: string|number = myName[0];
+    console.log(myStr);// Tôi
+```
 
 
+#### So sánh giữa interface và Type
 
+1. Kế thừa
+<div class="table-responsive">
+<table class="table table-bordered table-striped">
+  
+  <tr>
+   <th>Interface</th>
+   <th>Type</th>
+  </tr>
+    
+ <tbody>
+  <tr>
+   <td>
+   
+```ts
+interface Animal {
+name: string
+}
 
+interface Bear extends Animal {
+honey: boolean
+}
+
+const bear = getBear() 
+bear.name
+bear.honey
+
+```
+   
+   </td>
+   <td>
+
+```ts
+    type Animal = {
+    name: string
+    }
+
+    type Bear = Animal & { 
+    honey: boolean 
+    }
+
+    const bear = getBear();
+    bear.name;
+    bear.honey; 
+```
+
+   </td>
+  </tr>
+  
+ </tbody>
+</table>
+</div>
+
+2. Type không thể khai báo trùng tên, nhưng interface thì có thể
+
+<div class="table-responsive">
+<table class="table table-bordered table-striped">
+  
+  <tr>
+   <th>Interface</th>
+   <th>Type</th>
+  </tr>
+    
+ <tbody>
+  <tr>
+   <td>
+   
+```ts
+interface Window {
+  title: string
+}
+
+interface Window {
+  ts: TypeScriptAPI
+}
+
+const src = 'const a = "Hello World"';
+window.ts.transpileModule(src, {});
+
+```
+   
+   </td>
+   <td>
+
+```ts
+type Window = {
+  title: string
+}
+
+type Window = {
+  ts: TypeScriptAPI
+}
+
+ // Error: Duplicate identifier 'Window'.
+```
+
+   </td>
+  </tr>
+  
+ </tbody>
+</table>
+</div>
+
+3. Type có Unions type còn interface thì không:
+```ts
+type colors = 'blue' | 'green' ;
+```
+### Null và Undefined( --strictNullCheck trong Typescript 2.0)
+
+***Đọc trước**
+ Optional properties là một cách khai báo một biến hoặc một thuộc tính có thể có hoặc không
+Tuy nhiên một vấn dề gặp phải khi ta thực hiện những hành động liên quan đến biến hoặc thuộc tính mà không có giá trị sẽ dẫn đến những vấn đề không mong muốn.
+Vì vậy ,mà ta cần bật tính năng ***strictNullCheck=true*** trong phần cononfig type;
+```ts
+    interface Phone{
+        name: string,
+        price: number,
+        quantity?: number
+    }
+
+    let Iphone: Phone={
+        name: "XSM",
+        price:100,
+        quantity:1
+    }
+
+    const send = (quantity: number) =>{
+            console.log(quantity)
+    }
+
+    send(Iphone.quantity);//Error
+    // Giải quyết lỗi
+    if(Iphone.quantity){
+    send(Iphone.quantity);
+}
+
+```
+1. Config trong file ***tsconfig.json***
+    ```ts
+     "strictNullChecks": true, 
+    ```
+2. Ví dụ: Giúp cho code của chúng ta chặc chẽ hơn
+    ```ts
+    // Compiled with --strictNullChecks
+        let x: number;
+        let y: number | undefined;
+        let z: number | null | undefined;
+        x = 1;  // Ok
+        y = 1;  // Ok
+        z = 1;  // Ok
+        x = undefined;  // Error
+        y = undefined;  // Ok
+        z = undefined;  // Ok
+        x = null;  // Error
+        y = null;  // Error
+        z = null;  // Ok
+        x = y;  // Error
+        x = z;  // Error
+        y = x;  // Ok
+        y = z;  // Error
+        z = x;  // Ok
+        z = y;  // Ok
+    ```
+3. Ví dụ: Kiểm tra việc gán trước khi sử dụng   
+```ts
+    // Compiled with --strictNullChecks
+    let x: number;
+    let y: number | null;
+    let z: number | undefined;
+    x;  // Error, reference not preceded by assignment
+    y;  // Error, reference not preceded by assignment
+    z;  // Ok
+    x = 1;
+    y = null;
+    x;  // Ok
+    y;  // Ok
+
+```
 ## Class in TypeScript
 1. Định nghĩa:
 - Là một mô tả trừu tượng (abstract) của nhóm các đối tượng (object) có cùng bản chất.
@@ -283,3 +592,13 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
         }
 
     ```
+***
+## Generic Type trong Typescript
+
+## Type Intersection trong Typescript
+
+## Type Assertion và từ kháo ***as***
+
+## Keyof type and Typeof operator trong Typescript
+
+## Utility types trong Typescript
