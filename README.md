@@ -82,6 +82,25 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
 
 -----------------------------------
 
+### Type Assertion và từ khoá ***as***
+
+Type Assertion là một cơ chế logic của TypeScript, nó cho phép bạn đặt kiểu của biến và yêu cầu TypeScript không tự suy ra kiểu của biến đó. Lúc này chúng ta có thể tự quản lý được type của biến hoặc là type trả về từ một function. Tương tự như ép kiểu trong Java hay C#, tuy nhiên nó chỉ có mục đích là để TypeScript compiler biết kiểu của biến chứ không phải là check lúc runtime như các ngôn ngữ khác,
+
+Ví dụ
+```TS
+let grade: number | string
+
+let bobScore = grade as string
+
+let trumpScore = <boolean>grade // Conversion of type 'string | number' to type 'boolean' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+
+bobScore = 10 // Type 'number' is not assignable to type 'string'
+
+bobScore = "A";
+```
+link1: https://yeulaptrinh.vn/bai-7-type-inference-type-assertion/
+
+
 ### Array
 1. Khai báo: Array có thể được khai báo bằng hai cách sau
     ```ts
@@ -149,7 +168,9 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
     ```
 
 ### Tuple
-1. Khai báo: Tuple cho phép bạn khai báo mảng với các giá trị có kiểu dữ liệu mà bạn đã biết
+1. Khai báo:
+- Tuple cho phép bạn khai báo mảng với các giá trị có kiểu dữ liệu mà bạn đã biết
+- Những phần tử tại array được xác định kiểu.
     ```ts
         let array1 :[number,string];
           array1=[20,"Manh"];
@@ -252,6 +273,10 @@ Typescript đang được sử dụng ở các Framwork Front-end phổ biến n
 - Cũng có thể đặt tên cho các quy định kiểu dữ liệu:
 ```ts
     //Cách 1
+    type T = string;
+
+    // let newValue : T = 10; //Error
+
 
     type ID = number | string;
 
@@ -495,6 +520,29 @@ Vì vậy ,mà ta cần bật tính năng ***strictNullCheck=true*** trong phầ
     y;  // Ok
 
 ```
+
+## OOP trong TypeScript
+
+
+1. Đóng gói:
+    - Tức là trạng thái của đối tượng được bảo vệ không cho các truy cập từ code bên ngoài như thay đổi trong thái hay nhìn trực tiếp. 
+    - Đảm bảo sự bảo mật và toàn vẹn của đối tượng
+2. Trừu tượng: 
+    - Khi muốn người khác sử dụng lại code (class mà mình tạo ra)
+    - Giúp người khác không sử dụng sai mục đích mong muốn của mình đề ra ban đầu
+    - Tính trừu tượng cho phép bạn loại bỏ tính chất phức tạp của đối tượng bằng cách chỉ đưa ra các thuộc tính và phương thức cần thiết của đối tượng trong lập trình và bỏ qua những chi tiết không cần thiết.
+3. Kế thừa:
+    - là khả năng cho phép ta xây dựng một lớp mới dựa trên các định nghĩa của một lớp đã có
+    - Dựa trên class cha (tạo trước)và phát triển thêm các tính năng mới.
+    - Lớp con sẽ kế thừa tất cả các thuộc tính, phương thức của lớp cha
+    - Nhờ tính kế thừa mà chúng ta có thể mở rộng những đặc tính mà không cần phải định nghĩa lại
+
+4. Tính đa hình:
+    - Tính đa hình luôn tồn tại song song với tính kế thừa
+    - Khi có nhiều class con kế thừa class cha sẽ tạo ra các tính chất, đặc tính khác nhau gọi là đa hình.
+    - Những tác vụ trong cùng một đối tượng được thể hiện theo nhiều cách khác nhau.
+
+
 ## Class in TypeScript
 1. Định nghĩa:
 - Là một mô tả trừu tượng (abstract) của nhóm các đối tượng (object) có cùng bản chất.
@@ -593,12 +641,190 @@ Vì vậy ,mà ta cần bật tính năng ***strictNullCheck=true*** trong phầ
 
     ```
 ***
+
+## Module trong Typescript
+1. Định nghĩa:
+    - Có nghĩa là mình xuất nội dung ở file này để dùng ở file khác trong 1 dự án.
+    - Bạn có thể dùng nó với cú pháp ***import/export***
+    - Demo export: 
+    ```ts
+        // Có default
+        export default function helloWorld() {
+            console.log("Hello, world!");
+        }
+        // Không có default
+    
+        export var pi = 3.14;
+        export let squareTwo = 1.41;
+        export const phi = 1.61;
+        
+        export class RandomNumberGenerator {}
+        
+        export function absolute(num: number) {
+        if (num < 0) return num * -1;
+        return num;
+        }
+    ```
+    - Demo import:
+    ```ts
+        //cách 1
+        import hello from "./hello.js";
+        hello();
+
+        //cách 2
+
+        import { pi, phi, absolute } from "./maths.js";
+ 
+        console.log(pi);
+        const absPhi = absolute(phi);  // const absPhi: number
+        // cách 3 đổi tên 
+        import { old as new } from "./demo.js";
+        // cách 4 
+        import "./maths.js";
+
+
+    ```
+    - Bạn cũng có thể lấy tất cả các object cần export và đặt chúng vào chung một namespace với cú pháp * as name như sau:  
+
+    ```ts
+        // @filename: app.ts
+        import * as math from "./maths.js";
+        
+        console.log(math.pi);
+        const positivePhi = math.absolute(math.phi);
+                
+        // const positivePhi: number
+
+    ```
+
 ## Generic Type trong Typescript
+link1 : https://youtu.be/NS1wJBsQ9SM
 
-## Type Intersection trong Typescript
+link2: https://www.youtube.com/watch?v=zY0OpcVv4KI 00:00 - 09:00
 
-## Type Assertion và từ kháo ***as***
+1. Định nghĩa: 
+- Mình có thể linh động khai báo kiểu dữ liệu
+- Kiểu dữ liệu như là tham số, có thể nhận và trả về kiểu dữ liệu tương ứng
+- Có cặp đấu **<***Type***>** or **<***T,K,I***>**
+- ví dụ 1:
+```ts
+        type myGeneric<Type> = Type;
+
+        let newPersons : myGeneric<number>; 
+
+        newPersons=10;
+        newPersons="số mười" //Error Type 'string' is not assignable to type 'number'
+```
+- ví dụ 2:
+```ts
+type List<T>={
+    [index : number]: T | null // có thêm cả null nữa nhé
+}
+
+
+let arrayNumber:List<number>=[1,2,null,3] //Nếu bỏ một phần tử là string sẽ lỗi khá số thì sẽ lỗi
+let stringNumber:List<string>=["táo","Xoài","Ổi",null] //Nếu bỏ một phần tử khác string thì sẽ lỗi
+```
+- ví dụ 3:
+```ts
+    interface PeopleViet<TypeName,TypeAge>{
+    name : TypeName,
+    age : TypeAge
+    address:string
+    }
+
+    let PeopleViet1 : PeopleViet<string,number>[] =[{
+        name : "Manh",
+        age : 10,
+        address:"QuangBinh"
+    }]
+```
+
+
 
 ## Keyof type and Typeof operator trong Typescript
 
+### Keyof
+- Trả về tất cả những ***key*** của interface,type,object nào đó.
+- demo
+```ts
+    //Ví dụ 1
+    interface Xe {
+        name:string;
+        price: number
+    }
+
+    type Car = keyof Xe;
+
+    const tamp1:Car="name";
+    const tamp2:Car="price";
+
+```
+
+### Typeof
+
+- Đưa ra kiểu dữ liệu của biến là gì.
+
+```ts
+   
+console.log(typeof new String("hello")); // "object"
+
+console.log(typeof Number(53)); // "number"
+console.log(typeof new Number(53)); // "object"
+
+console.log(typeof new Boolean(true)); // "object"
+
+console.log(typeof undefined); // "undefined"
+
+console.log(typeof null); // "object"
+
+console.log(typeof Symbol()); // "symbol"
+
+console.log(typeof []); // "object"
+console.log(typeof Array(5)); // "object"
+
+console.log(typeof function() {}); // "function"
+console.log(typeof new Function); // "function"
+
+console.log(typeof new Date); // "object"
+
+console.log(typeof /^(.+)$/); // "object"
+console.log(typeof new RegExp("^(.+)$")); // "object"
+
+console.log(typeof {}); // "object"
+console.log(typeof new Object); // "object"
+```
+
+## Type Intersection trong Typescript
+link 1: https://comdy.vn/typescript/kieu-du-lieu-nang-cao-trong-typescript/
+- tạo ra một kiểu dữ liệu mới bằng cách kết hợp nhiều kiểu dữ liệu hiện có lại với nhau
+- sử dụng ký tự ***&*** để kết hợp các interface, type,... thành một bao gồm tổng hợp các thuộc tính chung.
+
+```ts
+    interface Pe{
+        name: string;
+        age: number;
+    }
+
+    interface Ani{
+        address: string;
+    }
+
+    interface Thing{
+        weight: number;
+    }
+
+    type PeAndAni = Pe & Ani & Thing;
+
+    const newPeAndAni: PeAndAni = {
+        name: "Manh",
+        age:21,
+        address:"QuangBinh",
+        weight:8
+    }
+```
+
+
 ## Utility types trong Typescript
+
+## Decorator trong Typescript
