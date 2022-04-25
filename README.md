@@ -97,6 +97,14 @@ let trumpScore = <boolean>grade // Conversion of type 'string | number' to type 
 bobScore = 10 // Type 'number' is not assignable to type 'string'
 
 bobScore = "A";
+
+
+
+////
+
+let grade: number | string | boolean
+let bobScore = grade as string | number
+bobScore = true
 ```
 link1: https://yeulaptrinh.vn/bai-7-type-inference-type-assertion/
 
@@ -826,5 +834,152 @@ link 1: https://comdy.vn/typescript/kieu-du-lieu-nang-cao-trong-typescript/
 
 
 ## Utility types trong Typescript
+1. Định nghĩa:
+- Là nhà phát triển tạo, định nghĩa sẵn những hướng giải quyết của những trường hợp thường hay gặp.
+- Chúng ta chỉ cần hiểu và áp dụng vào vấn đề thực tế.
+- Giúp tiết kiệm thời gian, và code ngắn gọn dễ nhớ hơn.
+
+2. Một số Utility type:
+
+Link: https://www.typescriptlang.org/docs/handbook/utility-types.html
+- **Partial<*Type>***
+    + Tách tất cả các thuộc tính của một ***Type*** nào đó thành tùy chọn.
+    + Tạo một kiểu với tất cả các thuộc tính của Kiểu được đặt thành tùy chọn. Tiện ích này sẽ trả về một kiểu đại diện cho tất cả các tập con của một kiểu nhất định.
+    + Demo:
+    ```ts
+        interface Todo {
+        title: string;
+        description: string;
+        }
+        
+        function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
+        return { ...todo, ...fieldsToUpdate };
+        }
+        
+        const todo1 = {
+        title: "organize desk",
+        description: "clear clutter",
+        };
+        
+        const todo2 = updateTodo(todo1, {
+        description: "throw out trash",
+        });
+    ```
+- **Required<*Type>***
+    + Xây dựng một kiểu bao gồm tất cả các thuộc tính của Kiểu được đặt thành bắt buộc. Ngược lại với ***Partial***
+    + Demo:
+    ```TS
+        interface Props {
+        a?: number;
+        b?: string;
+        }
+
+        const obj: Props = { a: 5 };
+
+        const obj2: Required<Props> = { a: 5 };
+    ```
+
+- **Readonly<*Type>***
+    + Xây dựng một kiểu với tất cả các thuộc tính của Kiểu được đặt thành chỉ đọc, nghĩa là không thể gán lại các thuộc tính của kiểu đã xây dựng.
+    + Demo:
+    ```TS
+        interface Todo {
+        title: string;
+        }
+
+        const todo: Readonly<Todo> = {
+        title: "Delete inactive users",
+        };
+
+        todo.title = "Hello";
+        Cannot assign to 'title' because it is a read-only property.
+    ```
+
+- **Record<Keys,Type>**
+    + Tạo ra một kiểu dữ liệu dạng object mới, khi đó nó sẽ lấy những ***Keys***, còn dữ liệu thì nó sẽ truyền vào từ ***Type*** hoặc ***Interface***
+    + Demo:
+    ```TS
+        interface CatInfo {
+        age: number;
+        breed: string;
+        }
+
+        type CatName = "miffy" | "boris" | "mordred";
+
+        const cats: Record<CatName, CatInfo> = {
+        miffy: { age: 10, breed: "Persian" },
+        boris: { age: 5, breed: "Maine Coon" },
+        mordred: { age: 16, breed: "British Shorthair" },
+        };
+
+        cats.boris;
+    ```
+- **Pick<Type,Keys>**
+    + Khi ta có sẵn một kiểu dữ liệu ***Type***, và ta muốn chỉ chọn ra một số thuộc tính của ***Type*** đó để tạo một ***Type*** mới.
+    + Demo:
+    ```TS
+        interface Todo {
+        title: string;
+        description: string;
+        completed: boolean;
+        }
+
+        type TodoPreview = Pick<Todo, "title" | "completed">;
+
+        const todo: TodoPreview = {
+        title: "Clean room",
+        completed: false,
+        };
+
+        todo;
+    ```
+
+- **Omit<Type,Keys>**
+    + Khác  với  ***Pick*** thì  tạo ra một ***Type*** mới với các thuộc tính đã bị loại bỏ thông qua **Keys** còn lại lấy hết
+    + Demo:
+    ```TS
+        interface Todo {
+        title: string;
+        description: string;
+        completed: boolean;
+        createdAt: number;
+        }
+
+        type TodoPreview = Omit<Todo, "description">;
+
+        const todo: TodoPreview = {
+        title: "Clean room",
+        completed: false,
+        createdAt: 1615544252770,
+        };
+
+        todo// Sẽ không có thuộc tính description
+  ```
+
+- **ReturnType<*Type>***
+    + Lấy kiểu dữ liệu của kết quả trả về của một function ***Type*** nào đấy
+    + Demo
+    ```ts
+        declare function f1(): { a: number; b: string };
+
+        type T4 = ReturnType<typeof f1>;
+        //type T4 = {
+            //a: number;
+            // b: string;}
+
+        type T0 = ReturnType<() => string>;
+        
+        //type T0 = string
+        type T1 = ReturnType<(s: string) => void>;
+            
+        //type T1 = void
+        type T2 = ReturnType<<T>() => T>;
+            
+        //type T2 = unknown
+
+
+
+
+    ```
 
 ## Decorator trong Typescript
